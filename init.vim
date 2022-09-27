@@ -15,6 +15,9 @@ call plug#begin()
     Plug 'airblade/vim-gitgutter'
     " LSP
     Plug 'neovim/nvim-lspconfig'
+    Plug 'williamboman/mason.nvim'
+    " Treesitter
+    Plug 'nvim-treesitter/nvim-treesitter'
     call plug#end()
 
 " Normal mode remappings
@@ -25,7 +28,43 @@ nnoremap <S-Tab> gT
 nnoremap <Tab> gt
 nnoremap <silent> <S-t> :tabnew<CR>
 
+" LSP configuration
+lua <<EOF
+require("mason").setup({
+    ui = {
+        icons = {
+            package_installed = "✓",
+            package_pending = "➜",
+            package_uninstalled = "✗"
+        }
+    }
+})
+EOF
 
+" Treesitter configuration
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = { "javascript", "html", "css", "go", "lua" },
+  sync_install = false,
+  auto_install = true,
+  highlight = {
+    enable = true,
+    additional_vim_regex_highlighting = false,
+  },
+incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = "gnn",
+      node_incremental = "grn",
+      scope_incremental = "grc",
+      node_decremental = "grm",
+    },
+  },
+  indent = {
+    enable = true
+  }
+}
+EOF
 " Airline
 let g:airline_theme='gruvbox'
 let g:airline_powerline_fonts = 1
